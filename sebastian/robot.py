@@ -1,9 +1,3 @@
-from .rpi import RPi
-
-# Angle per turn command.
-TURN_ANGLE = 10
-
-
 class Robot:
     """
     Sebastian the robot.
@@ -11,22 +5,22 @@ class Robot:
 
     def __init__(self):
         # TODO: initialize twitch stuff
-        self.rpi = RPi()
+        pass
 
     def run(self):
         # TODO: start twitch hooks
-
-        self.on_command('left')
-
-        import time
-        time.sleep(5)
+        pass
 
     def on_command(self, cmd):
         switcher = {
-            'forward': self.rpi.forward,
-            'left': self.rpi.left,
-            'right': self.rpi.right,
-            'stop': self.rpi.stop
+            'forward': noop,
+            'left': noop,
+            'right': noop,
+            'stop': noop
         }
         cmd = str(cmd).lower()
         switcher[cmd]()
+
+
+def noop():
+    pass
