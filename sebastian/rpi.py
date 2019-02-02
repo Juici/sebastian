@@ -3,23 +3,23 @@ try:
 except RuntimeError:
     raise RuntimeError('Error importing RPi.GPIO. Superuser privileges may be required.')
 
-# LEFT_WHEEL = 12
-# RIGHT_WHEEL = 13
+LEFT_WHEEL = 12
+RIGHT_WHEEL = 13
 
-LEFT_WHEEL = 32
-RIGHT_WHEEL = 33
+# LEFT_WHEEL = 32
+# RIGHT_WHEEL = 33
 
 CHANNELS = [LEFT_WHEEL, RIGHT_WHEEL]
 
-FREQ = 50
-DC = 7.5
+FREQ = 500
+DC = 100
 
 
 class RPi:
 
     def __init__(self):
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(True)
 
         GPIO.setup(CHANNELS, GPIO.OUT)
 
