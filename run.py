@@ -3,4 +3,7 @@
 import sebastian
 
 if __name__ == '__main__':
-    sebastian.run()
+    try:
+        sebastian.run()
+    except KeyboardInterrupt:
+        print('Stopping...')
