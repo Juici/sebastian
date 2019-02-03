@@ -26,6 +26,7 @@ class Bot(irc.bot.SingleServerIRCBot):
         # Current scores.
         self.scores = Voting(['forward', 'stop', 'left', 'right'])
 
+    @staticmethod
     def on_nicknameinuse(self, c, e):
         c.nick(c.get_nickname() + '_')
 
@@ -37,8 +38,6 @@ class Bot(irc.bot.SingleServerIRCBot):
     def on_pubmsg(self, c, e):
         self.do_command(e, e.arguments[0])
 
-    def on_privmsg(self, c, e):
-        print(e)
 
     # Handle the voting here.
     def do_command(self, e, cmd):
@@ -57,6 +56,4 @@ class Bot(irc.bot.SingleServerIRCBot):
         scores.clear()
         if res is not None:
             c.privmsg(channel, "DECIDED ON: {}".format(res))
-            # Send action to backend now
-            pass
 
