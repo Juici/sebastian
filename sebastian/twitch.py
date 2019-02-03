@@ -64,6 +64,6 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 
             cmd = Command.from_str(res)
 
-            sebastian: 'Sebastian' = self.sebastian()
+            sebastian = self.sebastian()
             if sebastian is not None:
                 sebastian.handle_command(cmd)
