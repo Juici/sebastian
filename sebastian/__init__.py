@@ -2,9 +2,9 @@
 Entry point to Sebastian.
 """
 
-from .robot import Robot
+from .robot import Sebastian
 
 
 def run():
-    bot = Robot()
+    bot = Sebastian()
     bot.run()

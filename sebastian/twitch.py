@@ -1,22 +1,30 @@
 import threading
+import weakref
 import irc.bot
 
 from .voting import Voting
 from .robot import Command
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .robot import Sebastian
 
 
 # Based on:
 # https://github.com/jaraco/irc/blob/master/scripts/testbot.py
 class TwitchBot(irc.bot.SingleServerIRCBot):
 
-    def __init__(self, channel: 'str', nickname: 'str', host: 'str', password: 'str',
+    def __init__(self, sebastian: 'Sebastian', channel: 'str', username: 'str', password: 'str',
+                 host: 'str',
                  port: 'int' = 6667):
         super(TwitchBot, self).__init__(
             self,
             [(host, port, password)],
-            nickname,
-            nickname
+            username,
+            username
         )
+        self.sebastian: 'Sebastian' = weakref.ref(sebastian)
         self.channel = channel
         # Current scores.
         self.scores = Voting(Command.values())
@@ -47,10 +55,12 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def count(self):
         # Loop self
         threading.Timer(10.0, self.count).start()
+
         res = self.scores.result()
         self.scores.clear()
+
         if res is not None:
             self.connection.privmsg(self.channel, "DECIDED ON: {}".format(res))
 
-            # Send action to backend now
-            pass
+            cmd = Command.from_str(res)
+            self.sebastian.handle_command(cmd)
