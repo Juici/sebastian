@@ -10,7 +10,8 @@ class Command(Enum):
     FORWARD = 'forward'
     LEFT = 'left'
     RIGHT = 'right'
-    STOP = 'stop'
+
+    # STOP = 'stop'
 
     @staticmethod
     def from_str(cmd: 'str') -> 'Command':
@@ -19,7 +20,7 @@ class Command(Enum):
             'forward': Command.FORWARD,
             'left': Command.LEFT,
             'right': Command.RIGHT,
-            'stop': Command.STOP,
+            # 'stop': Command.STOP,
         }
         return switch[cmd]
 
