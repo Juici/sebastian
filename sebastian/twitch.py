@@ -36,6 +36,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def on_welcome(self, _c, _e):
         self.connection.join(self.channel)
         print('JOINED')
+        self.connection.privmsg(self.channel, '[!] bot arrived')
         self.count()
 
     def on_pubmsg(self, _c, e):
@@ -47,14 +48,20 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         """
         nick = e.source.nick
         if cmd[0] == '!' and len(cmd) > 1:
-            cmd = cmd[1:].lower()
-            res = self.scores.vote(cmd)
+            cmda = cmd[1:].lower()
+            if cmda[0] == 'l':
+                cmda = 'left'
+            elif cmda[0] == 'r':
+                cmda = 'right'
+            elif cmda[0] == 'f':
+                cmda = 'forward' 
+            res = self.scores.vote(cmda)
             if not res:
                 self.connection.privmsg(self.channel, '@{},  Invalid option!'.format(nick))
 
     def count(self):
         # Loop self
-        threading.Timer(5.0, self.count).start()
+        threading.Timer(3.0, self.count).start()
 
         res = self.scores.result()
         self.scores.clear()
@@ -64,6 +71,6 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 
             cmd = Command.from_str(res)
 
-            sebastian: 'Sebastian' = self.sebastian()
+            sebastian = self.sebastian()
             if sebastian is not None:
                 sebastian.handle_command(cmd)

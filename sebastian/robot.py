@@ -33,5 +33,4 @@ class Sebastian:
     # noinspection PyMethodMayBeStatic
     def handle_command(self, cmd: 'Command'):
         print('handle {}'.format(cmd.value))
-
-        pass
+        cmd.function(cmd.value)()
