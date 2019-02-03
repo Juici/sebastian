@@ -1,3 +1,28 @@
+from enum import Enum
+
+
+class Command(Enum):
+    """
+    Commands for Sebastian's movement.
+    """
+
+    FORWARD = 'forward'
+    LEFT = 'left'
+    RIGHT = 'right'
+    STOP = 'stop'
+
+    @staticmethod
+    def from_str(cmd: 'str') -> 'Command':
+        cmd = cmd.lower()
+        switch = {
+            'forward': Command.FORWARD,
+            'left': Command.LEFT,
+            'right': Command.RIGHT,
+            'stop': Command.STOP,
+        }
+        return switch[cmd]
+
+
 class Robot:
     """
     Sebastian the robot.
@@ -11,16 +36,5 @@ class Robot:
         # TODO: start twitch hooks
         pass
 
-    def on_command(self, cmd):
-        switcher = {
-            'forward': noop,
-            'left': noop,
-            'right': noop,
-            'stop': noop
-        }
-        cmd = str(cmd).lower()
-        switcher[cmd]()
-
-
-def noop():
-    pass
+    def handle_command(self, cmd: 'Command'):
+        pass
