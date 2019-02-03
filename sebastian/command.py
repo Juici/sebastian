@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List
 
+from . import proto
 
 class Command(Enum):
     """
@@ -27,3 +28,12 @@ class Command(Enum):
     @staticmethod
     def values() -> 'List[Command]':
         return [c.value for c in Command]
+
+    @staticmethod
+    def function(cmd: 'str'):
+        switch = {
+            'forward': proto.Control.forward,
+            'left': proto.Control.left,
+            'right': proto.Control.right
+        }
+        return switch[cmd]
