@@ -3,7 +3,7 @@ import weakref
 import irc.bot
 
 from .voting import Voting
-from .robot import Command
+from .command import Command
 
 from typing import TYPE_CHECKING
 
@@ -18,13 +18,13 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def __init__(self, sebastian: 'Sebastian', channel: 'str', username: 'str', password: 'str',
                  host: 'str',
                  port: 'int' = 6667):
-        super(TwitchBot, self).__init__(
+        irc.bot.SingleServerIRCBot.__init__(
             self,
             [(host, port, password)],
             username,
-            username
+            username,
         )
-        self.sebastian: 'Sebastian' = weakref.ref(sebastian)
+        self.sebastian = weakref.ref(sebastian)
         self.channel = channel
         # Current scores.
         self.scores = Voting(Command.values())
@@ -54,7 +54,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 
     def count(self):
         # Loop self
-        threading.Timer(10.0, self.count).start()
+        threading.Timer(5.0, self.count).start()
 
         res = self.scores.result()
         self.scores.clear()
@@ -63,4 +63,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             self.connection.privmsg(self.channel, "DECIDED ON: {}".format(res))
 
             cmd = Command.from_str(res)
-            self.sebastian.handle_command(cmd)
+
+            sebastian: 'Sebastian' = self.sebastian()
+            if sebastian is not None:
+                sebastian.handle_command(cmd)
