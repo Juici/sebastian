@@ -2,41 +2,41 @@ import threading
 import irc.bot
 
 from .voting import Voting
+from .robot import Command
 
 
 # Based on:
 # https://github.com/jaraco/irc/blob/master/scripts/testbot.py
 class TwitchBot(irc.bot.SingleServerIRCBot):
 
-    def __init__(self, channel, nickname, server, password, port=6667):
-        irc.bot.SingleServerIRCBot.__init__(
+    def __init__(self, channel: 'str', nickname: 'str', host: 'str', password: 'str',
+                 port: 'int' = 6667):
+        super(TwitchBot, self).__init__(
             self,
-            [(server, port, password)],
+            [(host, port, password)],
             nickname,
             nickname
         )
         self.channel = channel
-        # Set the state of the robot.
-        self.state = {
-            'left': 0,
-            'right': 0
-        }
         # Current scores.
-        self.scores = Voting(['forward', 'stop', 'left', 'right'])
+        self.scores = Voting(Command.values())
 
-    def on_nicknameinuse(self, c, _e):
-        c.nick(c.get_nickname() + '_')
+    # noinspection PyMethodMayBeStatic
+    def on_nicknameinuse(self, _c, _e):
+        self.connection.nick(self.connection.get_nickname() + '_')
 
-    def on_welcome(self, c, _e):
-        c.join(self.channel)
+    def on_welcome(self, _c, _e):
+        self.connection.join(self.channel)
         print('JOINED')
-        self.count(c, self.channel, self.scores)
+        self.count()
 
     def on_pubmsg(self, _c, e):
         self.do_command(e, e.arguments[0])
 
-    # Handle the voting here.
     def do_command(self, e, cmd: 'str'):
+        """
+        Handle voting logic.
+        """
         nick = e.source.nick
         if cmd[0] == '!' and len(cmd) > 1:
             cmd = cmd[1:].lower()
@@ -44,13 +44,13 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             if not res:
                 self.connection.privmsg(self.channel, '@{},  Invalid option!'.format(nick))
 
-    def count(self, c, channel, scores):
+    def count(self):
         # Loop self
-        threading.Timer(10.0, self.count, args=[c, channel, scores]).start()
-        res = scores.result()
-        scores.clear()
+        threading.Timer(10.0, self.count).start()
+        res = self.scores.result()
+        self.scores.clear()
         if res is not None:
-            c.privmsg(channel, "DECIDED ON: {}".format(res))
+            self.connection.privmsg(self.channel, "DECIDED ON: {}".format(res))
 
             # Send action to backend now
             pass

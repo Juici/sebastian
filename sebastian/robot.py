@@ -1,4 +1,8 @@
+from dotenv import load_dotenv
 from enum import Enum
+from typing import List
+
+from .twitch import TwitchBot
 
 
 class Command(Enum):
@@ -22,6 +26,10 @@ class Command(Enum):
         }
         return switch[cmd]
 
+    @staticmethod
+    def values() -> 'List[Command]':
+        return [c.value for c in Command]
+
 
 class Robot:
     """
@@ -29,7 +37,7 @@ class Robot:
     """
 
     def __init__(self):
-        # TODO: initialize twitch stuff
+        load_dotenv()
         pass
 
     def run(self):
