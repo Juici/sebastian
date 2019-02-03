@@ -18,11 +18,11 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def __init__(self, sebastian: 'Sebastian', channel: 'str', username: 'str', password: 'str',
                  host: 'str',
                  port: 'int' = 6667):
-        super(TwitchBot, self).__init__(
+        irc.bot.SingleServerIRCBot.__init__(
             self,
             [(host, port, password)],
             username,
-            username
+            username,
         )
         self.sebastian: 'Sebastian' = weakref.ref(sebastian)
         self.channel = channel

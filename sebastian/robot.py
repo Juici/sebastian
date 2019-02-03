@@ -24,12 +24,13 @@ class Sebastian:
             username=os.environ['TWITCH_USERNAME'],
             password=os.environ['TWITCH_PASSWORD'],
             host=os.environ['IRC_HOST'],
-            port=os.environ['IRC_PORT'],
+            port=int(os.environ['IRC_PORT']),
         )
 
     def run(self):
         self.bot.start()
 
+    # noinspection PyMethodMayBeStatic
     def handle_command(self, cmd: 'Command'):
         print('handle {}'.format(cmd.value))
 
