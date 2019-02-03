@@ -24,7 +24,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             username,
             username,
         )
-        self.sebastian: 'Sebastian' = weakref.ref(sebastian)
+        self.sebastian = weakref.ref(sebastian)
         self.channel = channel
         # Current scores.
         self.scores = Voting(Command.values())
@@ -63,4 +63,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             self.connection.privmsg(self.channel, "DECIDED ON: {}".format(res))
 
             cmd = Command.from_str(res)
-            self.sebastian.handle_command(cmd)
+
+            sebastian: 'Sebastian' = self.sebastian()
+            if sebastian is not None:
+                sebastian.handle_command(cmd)
