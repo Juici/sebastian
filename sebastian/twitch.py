@@ -3,7 +3,7 @@ import weakref
 import irc.bot
 
 from .voting import Voting
-from .robot import Command
+from .command import Command
 
 from typing import TYPE_CHECKING
 
@@ -54,7 +54,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 
     def count(self):
         # Loop self
-        threading.Timer(10.0, self.count).start()
+        threading.Timer(5.0, self.count).start()
 
         res = self.scores.result()
         self.scores.clear()
