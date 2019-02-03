@@ -6,7 +6,7 @@ class Voting:
 
     def clear(self):
         for option in self.options:
-            self.scores.update({ option: 0 })
+            self.scores.update({option: 0})
 
     def vote(self, option):
         print(option)
@@ -18,7 +18,7 @@ class Voting:
             return False
 
     def result(self):
-        res =  max(self.scores, key=self.scores.get)
+        res = max(self.scores, key=self.scores.get)
         if self.scores[res] == 0:
             return None
         return res
